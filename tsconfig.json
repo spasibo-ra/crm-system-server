@@ -23,6 +23,7 @@
       "@auth/*": ["src/auth/*"],
       "@users/*": ["src/users/*"],
       "@customers/*": ["src/customers/*"],
+      "@interactions/*": ["src/interactions/*"]
     }
   }
 }

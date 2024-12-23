@@ -88,7 +88,8 @@
       "@common/(.*)$": "<rootDir>/../src/common/$1",
       "@auth/(.*)$": "<rootDir>/../src/auth/$1",
       "@users/(.*)$": "<rootDir>/../src/users/$1",
-      "@customers/(.*)$": "<rootDir>/../src/customers/$1"
+      "@customers/(.*)$": "<rootDir>/../src/customers/$1",
+      "@interactions/(.*)$":"<rootDir>/../src/interactions/$1"
     }
   }
 }

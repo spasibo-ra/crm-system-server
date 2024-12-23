@@ -8,6 +8,7 @@ import { KnexModule } from '@shared/knex';
 import { validate } from './env.validation';
 import { KnexDatabaseService } from '@shared/config/database/db.knex.config';
 import { CustomersModule } from './customers/customers.module';
+import { InteractionsModule } from './interactions/interactions.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { CustomersModule } from './customers/customers.module';
     UsersModule,
     AuthModule,
     CustomersModule,
+    InteractionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
