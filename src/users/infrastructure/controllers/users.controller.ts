@@ -15,7 +15,8 @@ import {
   PaginationParams,
 } from '@common/decorators/pagination.decorator';
 import { UpdateUserDto } from '@users/application/dto/user.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Auth } from '@common/decorators/auth.decorator';
 
 @ApiTags('Users')
 @Controller('users')
@@ -31,6 +32,8 @@ export class UsersController {
   }
 
   @Patch(':id')
+  @ApiBearerAuth()
+  @Auth()
   async updateUser(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateUserDto: UpdateUserDto,

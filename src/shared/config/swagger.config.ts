@@ -8,6 +8,7 @@ export const swaggerConfig = new DocumentBuilder()
   .setDescription('API for CRM system')
   .setVersion('1.0')
   .addTag('company')
+  .addBearerAuth({ type: 'http', scheme: 'bearer' })
   .build();
 
 export const swaggerDocumentOptions: SwaggerDocumentOptions = {
