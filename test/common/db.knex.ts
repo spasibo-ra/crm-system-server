@@ -2,7 +2,7 @@ import * as knex from 'knex';
 
 const { PGHOST, PGPORT, PGUSER, PGPASSWORD, PGDATABASE } = process.env;
 
-export default knex({
+export const db = knex({
   client: 'pg',
   connection: {
     host: PGHOST,
