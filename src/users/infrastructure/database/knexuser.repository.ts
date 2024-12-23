@@ -30,8 +30,7 @@ export class KnexUserRepository implements IUserRepository {
           user.updatedAt,
         ),
     );
-    console.dir({ total });
-    return { data, total: +total[0] };
+    return { data, total: +total[0].count };
   }
 
   async findById(id: string): Promise<User | null> {

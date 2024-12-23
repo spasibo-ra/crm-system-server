@@ -31,7 +31,7 @@ export class KnexCustomerRepository implements ICustomerRepository {
           customer.updatedAt,
         ),
     );
-    return { data, total: +total[0] };
+    return { data, total: +total[0].count };
   }
 
   async findById(id: string): Promise<Customer | null> {
