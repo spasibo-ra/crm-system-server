@@ -15,7 +15,9 @@ import {
   PaginationParams,
 } from '@common/decorators/pagination.decorator';
 import { UpdateUserDto } from '@users/application/dto/user.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Users')
 @Controller('users')
 export class UsersController {
   constructor(
