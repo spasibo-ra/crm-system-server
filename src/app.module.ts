@@ -9,6 +9,7 @@ import { validate } from './env.validation';
 import { KnexDatabaseService } from '@shared/config/database/db.knex.config';
 import { CustomersModule } from './customers/customers.module';
 import { InteractionsModule } from './interactions/interactions.module';
+import { DealsModule } from './deals/deals.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { InteractionsModule } from './interactions/interactions.module';
     AuthModule,
     CustomersModule,
     InteractionsModule,
+    DealsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

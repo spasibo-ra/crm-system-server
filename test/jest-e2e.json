@@ -12,6 +12,7 @@
     "@auth/(.*)$": "<rootDir>/../src/auth/$1",
     "@users/(.*)$":"<rootDir>/../src/users/$1",
     "@customers/(.*)$":"<rootDir>/../src/customers/$1",
-    "@interactions/(.*)$":"<rootDir>/../src/interactions/$1"
+    "@interactions/(.*)$":"<rootDir>/../src/interactions/$1",
+    "@deals/(.*)$":"<rootDir>/../src/deals/$1"
   } 
 }
