@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
-import { db, createUser, deleteAllUsers, user as _user } from './common';
+import { createUser, user as _user, deleteAllRecords } from './common';
 
 describe('AuthController (e2e)', () => {
   let app: INestApplication;
@@ -17,7 +17,7 @@ describe('AuthController (e2e)', () => {
   });
 
   afterEach(async () => {
-    await deleteAllUsers(db);
+    await deleteAllRecords('users');
     await app.close();
   });
 
@@ -31,7 +31,7 @@ describe('AuthController (e2e)', () => {
   });
 
   it('/auth/login should login', async (): Promise<void> => {
-    await createUser(db, _user);
+    await createUser(_user);
     const { body } = await request(app.getHttpServer())
       .post('/auth/login')
       .send({ email: _user.email, password: _user.password })

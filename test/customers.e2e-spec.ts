@@ -3,12 +3,11 @@ import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
 import {
-  db,
   createUser,
   generateToken,
   customer,
   user as _user,
-  deleteAllUsers,
+  deleteAllRecords,
 } from './common';
 import { User } from '@users/domain/entities/user.entity';
 
@@ -20,7 +19,7 @@ describe('CustomersController (e2e)', () => {
   let customerId = '';
 
   beforeAll(async () => {
-    user = await createUser(db, _user);
+    user = await createUser(_user);
     token = await generateToken(user);
   });
 
@@ -37,7 +36,10 @@ describe('CustomersController (e2e)', () => {
     await app.close();
   });
 
-  afterAll(async () => await deleteAllUsers(db));
+  afterAll(async () => {
+    await deleteAllRecords('users');
+    await deleteAllRecords('customers');
+  });
 
   it('[GET: /customers] should return data & total', async () => {
     const { body } = await request(app.getHttpServer())
