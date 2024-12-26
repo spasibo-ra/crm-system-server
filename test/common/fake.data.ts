@@ -1,29 +1,32 @@
-import * as crypto from 'node:crypto';
-import { User } from '@users/domain/entities/user.entity';
-import { Customer } from '@customers/domain/entities/customer.entity';
-import { InteractionType } from '@interactions/domain/entities';
-import { CreateInteractionDto } from '@interactions/application/dto';
+import { randomUUID } from 'node:crypto';
+import { User } from '@app/domain/crm/user';
+import { Customer } from '@app/domain/crm/customer';
+import { Interaction } from '@app/domain/crm/interaction';
 
-export const user: User = {
-  id: crypto.randomUUID(),
+export const user: User = new User({
+  id: randomUUID(),
   email: 'test@spasibo.ra',
   name: 'testuser',
   password: 'testuser123',
   createdAt: new Date(),
   updatedAt: new Date(),
-};
+});
 
-export const customer: Customer = {
-  id: crypto.randomUUID(),
+export const customer: Customer = new Customer({
+  id: randomUUID(),
   email: 'test-customer@crm-system.ra',
   name: 'test-customer',
   phone: '+380507778899',
   createdAt: new Date(),
   updatedAt: new Date(),
-};
+});
 
-export const interaction: CreateInteractionDto = {
+export const interaction: Interaction = new Interaction({
+  id: randomUUID(),
+  managerId: user.id,
   customerId: customer.id,
-  type: InteractionType.EMAIL,
+  type: 'email',
   description: 'Test interaction',
-};
+  createdAt: new Date(),
+  updatedAt: new Date(),
+});

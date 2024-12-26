@@ -9,10 +9,9 @@
   "moduleNameMapper": {
     "@shared/(.*)$": "<rootDir>/../src/shared/$1",
     "@common/(.*)$": "<rootDir>/../src/common/$1",
-    "@auth/(.*)$": "<rootDir>/../src/auth/$1",
-    "@users/(.*)$":"<rootDir>/../src/users/$1",
-    "@customers/(.*)$":"<rootDir>/../src/customers/$1",
-    "@interactions/(.*)$":"<rootDir>/../src/interactions/$1",
-    "@deals/(.*)$":"<rootDir>/../src/deals/$1"
+    "@app/core/(.*)$": "<rootDir>/../src/core/$1",
+    "@app/application/(.*)$": "<rootDir>/../src/application/$1",
+    "@app/domain/(.*)$": "<rootDir>/../src/domain/$1",
+    "@app/infrastructure/(.*)$": "<rootDir>/../src/infrastructure/$1"
   } 
 }

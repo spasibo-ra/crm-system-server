@@ -1,8 +1,5 @@
-import { AuthModule } from '@auth/auth.module';
-import { CustomersModule } from '@customers/customers.module';
-import { InteractionsModule } from '@interactions/interactions.module';
+import { HttpModule } from '@app/infrastructure/http/http.module';
 import { DocumentBuilder, SwaggerDocumentOptions } from '@nestjs/swagger';
-import { UsersModule } from '@users/users.module';
 
 export const swaggerConfig = new DocumentBuilder()
   .setTitle('CRM API')
@@ -13,5 +10,5 @@ export const swaggerConfig = new DocumentBuilder()
   .build();
 
 export const swaggerDocumentOptions: SwaggerDocumentOptions = {
-  include: [AuthModule, UsersModule, CustomersModule, InteractionsModule],
+  include: [HttpModule],
 };

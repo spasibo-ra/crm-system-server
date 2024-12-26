@@ -1,0 +1,118 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model companies {
+  id        String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String     @db.VarChar(50)
+  industry  String?    @db.VarChar(255)
+  createdAt DateTime?  @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime?  @default(now()) @db.Timestamptz(6)
+  contacts  contacts[]
+}
+
+model contacts {
+  id        String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  firstName String     @db.VarChar(50)
+  lastName  String?    @db.VarChar(50)
+  email     String?    @unique(map: "contacts_email_unique") @db.VarChar(255)
+  phone     String?    @db.VarChar(50)
+  companyId String?    @db.Uuid
+  createdAt DateTime?  @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime?  @default(now()) @db.Timestamptz(6)
+  companies companies? @relation(fields: [companyId], references: [id], onUpdate: NoAction, map: "contacts_companyid_foreign")
+}
+
+model customers {
+  id           String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email        String         @unique(map: "customers_email_unique") @db.VarChar(50)
+  phone        String?        @db.VarChar(50)
+  name         String         @db.VarChar(50)
+  segment      String?        @db.VarChar(50)
+  managerId    String?        @db.Uuid
+  createdAt    DateTime?      @default(now()) @db.Timestamptz(6)
+  updatedAt    DateTime?      @default(now()) @db.Timestamptz(6)
+  users        users?         @relation(fields: [managerId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "customers_managerid_foreign")
+  deals        deals[]
+  interactions interactions[]
+}
+
+model deals {
+  id          String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  customerId  String?     @db.Uuid
+  managerId   String?     @db.Uuid
+  title       String      @db.VarChar(255)
+  description String?
+  status      dealstatus? @default(open)
+  stage       dealstage?  @default(initial)
+  amount      Decimal?    @db.Decimal(15, 2)
+  currency    String?     @default("USD") @db.VarChar(10)
+  closedAt    DateTime?   @db.Timestamptz(6)
+  createdAt   DateTime?   @default(now()) @db.Timestamptz(6)
+  updatedAt   DateTime?   @default(now()) @db.Timestamptz(6)
+  customers   customers?  @relation(fields: [customerId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "deals_customerid_foreign")
+  users       users?      @relation(fields: [managerId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "deals_managerid_foreign")
+}
+
+model interactions {
+  id          String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  customerId  String?          @db.Uuid
+  managerId   String?          @db.Uuid
+  type        interactiontype? @default(email)
+  description String?
+  createdAt   DateTime?        @default(now()) @db.Timestamptz(6)
+  updatedAt   DateTime?        @default(now()) @db.Timestamptz(6)
+  customers   customers?       @relation(fields: [customerId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "interactions_customerid_foreign")
+  users       users?           @relation(fields: [managerId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "interactions_managerid_foreign")
+}
+
+model knex_migrations {
+  id             Int       @id @default(autoincrement())
+  name           String?   @db.VarChar(255)
+  batch          Int?
+  migration_time DateTime? @db.Timestamptz(6)
+}
+
+model knex_migrations_lock {
+  index     Int  @id @default(autoincrement())
+  is_locked Int?
+}
+
+model users {
+  id           String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email        String         @unique(map: "users_email_unique") @db.VarChar(25)
+  password     String         @db.VarChar(255)
+  name         String         @db.VarChar(25)
+  createdAt    DateTime?      @default(now()) @db.Timestamptz(6)
+  updatedAt    DateTime?      @default(now()) @db.Timestamptz(6)
+  customers    customers[]
+  deals        deals[]
+  interactions interactions[]
+}
+
+enum dealstage {
+  initial
+  discussion
+  negotiation
+  success
+  failure
+}
+
+enum dealstatus {
+  open
+  in_progress
+  closed
+}
+
+enum interactiontype {
+  call
+  email
+  meeting
+  follow_up
+  presentation
+}

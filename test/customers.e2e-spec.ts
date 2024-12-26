@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { AppModule } from '../src/app.module';
 import {
   createUser,
   generateToken,
@@ -9,11 +8,16 @@ import {
   user as _user,
   deleteAllRecords,
 } from './common';
-import { User } from '@users/domain/entities/user.entity';
+import { User } from '@app/domain/crm/user';
+import { EnvModule } from '@app/infrastructure/env';
+import { PersistenceModule } from '@app/infrastructure/persistence/persistence.module';
+import { CustomerController } from '@app/infrastructure/http/controllers/customer/customer.controller';
+import { CustomerUseCaseModule } from '@app/application/crm/use-case/customer';
+import { JwtStrategy } from '@app/infrastructure/http/strategies/jwt.strategy';
 
 describe('CustomersController (e2e)', () => {
   let app: INestApplication;
-
+  let httpServer: any;
   let user: User;
   let token: string;
   let customerId = '';
@@ -25,16 +29,21 @@ describe('CustomersController (e2e)', () => {
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
+      imports: [
+        EnvModule,
+        PersistenceModule.register({ type: 'knex', global: true }),
+        CustomerUseCaseModule,
+      ],
+      controllers: [CustomerController],
+      providers: [JwtStrategy],
     }).compile();
 
     app = moduleFixture.createNestApplication();
     await app.init();
+    httpServer = app.getHttpServer();
   });
 
-  afterEach(async () => {
-    await app.close();
-  });
+  afterEach(async () => await app.close());
 
   afterAll(async () => {
     await deleteAllRecords('users');
@@ -42,41 +51,41 @@ describe('CustomersController (e2e)', () => {
   });
 
   it('[GET: /customers] should return data & total', async () => {
-    const { body } = await request(app.getHttpServer())
-      .get('/customers')
-      .expect(200);
+    const { body } = await request(httpServer).get('/customers').expect(200);
     expect(body).toHaveProperty('data', []);
     expect(body).toHaveProperty('total', 0);
   });
 
   it('[POST: /customers] should not create a new customer (not authorised)', async () => {
-    await request(app.getHttpServer())
+    const { email, name, phone } = customer;
+    await request(httpServer)
       .post('/customers')
-      .send(customer)
+      .send({ email, name, phone })
       .expect(401);
   });
 
   it('[POST: /customers] should create a new customer (authorised)', async () => {
-    const { body } = await request(app.getHttpServer())
+    const { email, name, phone } = customer;
+    const { body } = await request(httpServer)
       .post('/customers')
       .auth(token, { type: 'bearer' })
-      .send(customer)
+      .send({ email, name, phone })
       .expect(201);
-    expect(body).toHaveProperty('id');
-    customerId = body.id;
+    expect(body).toHaveProperty('props.id');
+    customerId = body.props.id;
   });
 
   it('[GET: /customers/:id] should return customer', async () => {
-    const { body } = await request(app.getHttpServer())
+    const { body } = await request(httpServer)
       .get(`/customers/${customerId}`)
       .expect(200);
 
-    expect(body).toHaveProperty('id', customerId);
+    expect(body).toHaveProperty('props.id', customerId);
   });
 
   it('[PATCH: /customer/:id] should not update customer (not authorised)', async () => {
     const newName = 'test-customer-new';
-    await request(app.getHttpServer())
+    await request(httpServer)
       .patch(`/customers/${customerId}`)
       .send({ name: newName })
       .expect(401);
@@ -84,11 +93,11 @@ describe('CustomersController (e2e)', () => {
 
   it('[PATCH: /customer/:id] should not update customer (not authorised)', async () => {
     const newName = 'test-customer-new';
-    const { body } = await request(app.getHttpServer())
+    const { body } = await request(httpServer)
       .patch(`/customers/${customerId}`)
       .auth(token, { type: 'bearer' })
       .send({ name: newName })
       .expect(200);
-    expect(body).toHaveProperty('name', newName);
+    expect(body).toHaveProperty('props.name', newName);
   });
 });

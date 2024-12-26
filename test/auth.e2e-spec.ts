@@ -1,41 +1,95 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { AppModule } from '../src/app.module';
-import { createUser, user as _user, deleteAllRecords } from './common';
+
+import { JwtModule } from '@nestjs/jwt';
+import { EnvModule, EnvService } from '@app/infrastructure/env';
+import { PersistenceModule } from '@app/infrastructure/persistence/persistence.module';
+
+import { AuthController } from '@app/infrastructure/http/controllers/auth/auth.controller';
+import {
+  LoginUseCase,
+  RegisterUseCase,
+} from '@app/application/crm/use-case/auth';
+import {
+  CreateUserUseCase,
+  GetUserByEmailUseCase,
+} from '@app/application/crm/use-case/user';
+import { user as _user, createUser, deleteAllRecords } from './common';
 
 describe('AuthController (e2e)', () => {
+  let httpServer: any;
   let app: INestApplication;
 
-  beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
+  beforeAll(async () => {
+    const moduleRef: TestingModule = await Test.createTestingModule({
+      imports: [
+        EnvModule,
+        PersistenceModule.register({ type: 'knex', global: true }),
+        JwtModule.registerAsync({
+          imports: [EnvModule],
+          inject: [EnvService],
+          useFactory: async (envService: EnvService) => ({
+            secret: envService.get('JWT_SECRET'),
+            signOptions: { expiresIn: envService.get('EXPIRES_IN') },
+          }),
+        }),
+      ],
+      controllers: [AuthController],
+      providers: [
+        GetUserByEmailUseCase,
+        CreateUserUseCase,
+        LoginUseCase,
+        RegisterUseCase,
+      ],
     }).compile();
 
-    app = moduleFixture.createNestApplication();
+    app = moduleRef.createNestApplication();
     await app.init();
+
+    httpServer = app.getHttpServer();
   });
 
-  afterEach(async () => {
-    await deleteAllRecords('users');
-    await app.close();
+  afterEach(async () => await deleteAllRecords('users'));
+  afterAll(async () => await app.close());
+
+  describe('LoginUseCase', () => {
+    it('[POST: /login] should not login', async () => {
+      const { email, password } = _user;
+      await request(httpServer)
+        .post('/auth/login')
+        .send({ email, password })
+        .expect(401);
+    });
+
+    it('[POST: /login] should login', async () => {
+      const { email, password } = _user;
+      await createUser(_user);
+      const { body } = await request(httpServer)
+        .post('/auth/login')
+        .send({ email, password })
+        .expect(201);
+      expect(body).toHaveProperty('accessToken');
+    });
   });
 
-  it('/auth/register should create new user', async (): Promise<void> => {
-    const { body } = await request(app.getHttpServer())
-      .post('/auth/register')
-      .send(_user)
-      .expect(201);
+  describe('RegisterUseCase', () => {
+    it('[POST: /register] should register a new user', async () => {
+      const { email, password, name } = _user;
+      const { body } = await request(httpServer)
+        .post('/auth/register')
+        .send({ email, password, name })
+        .expect(201);
+      expect(body).toHaveProperty('message', 'User registered successfully');
+    });
 
-    expect(body).toHaveProperty('message', 'User registered successfully');
-  });
-
-  it('/auth/login should login', async (): Promise<void> => {
-    await createUser(_user);
-    const { body } = await request(app.getHttpServer())
-      .post('/auth/login')
-      .send({ email: _user.email, password: _user.password })
-      .expect(201);
-    expect(body).toHaveProperty('accessToken');
+    it('[POST: /register] should not register a new user', async () => {
+      const { email, password, name } = _user;
+      await createUser(_user);
+      await request(httpServer)
+        .post('/auth/register')
+        .send({ email, password, name })
+        .expect(409);
+    });
   });
 });
