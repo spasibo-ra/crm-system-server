@@ -20,11 +20,10 @@
     "paths": {
       "@common/*": ["src/common/*"],
       "@shared/*": ["src/shared/*"],
-      "@auth/*": ["src/auth/*"],
-      "@users/*": ["src/users/*"],
-      "@customers/*": ["src/customers/*"],
-      "@interactions/*": ["src/interactions/*"],
-      "@deals/*": ["src/deals/*"]
+      "@app/core/*": ["src/core/*"],
+      "@app/application/*": ["src/application/*"],
+      "@app/domain/*": ["src/domain/*"],
+      "@app/infrastructure/*": ["src/infrastructure/*"]
     }
   }
 }

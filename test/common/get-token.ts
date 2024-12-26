@@ -1,5 +1,5 @@
 import { JwtService } from '@nestjs/jwt';
-import { User } from '@users/domain/entities/user.entity';
+import { User } from '@app/domain/crm/user';
 
 export async function generateToken(user: Partial<User>) {
   const payload = { id: user.id, email: user.email };
