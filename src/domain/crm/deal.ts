@@ -26,6 +26,7 @@ export interface DealProps {
 
 export class Deal extends Entity<DealProps> {
   constructor(props: DealProps) {
+    props.description = props.description ?? '';
     super(props);
   }
 

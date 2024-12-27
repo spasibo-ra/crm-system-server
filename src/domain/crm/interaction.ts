@@ -19,6 +19,7 @@ export interface InteractionProps {
 
 export class Interaction extends Entity<InteractionProps> {
   constructor(props: InteractionProps) {
+    props.description = props.description ?? '';
     super(props);
   }
 
