@@ -1,4 +1,5 @@
 import * as knex from 'knex';
+import { Tables } from 'knex/types/tables';
 
 const { PGHOST, PGPORT, PGUSER, PGPASSWORD, PGDATABASE } = process.env;
 
@@ -21,7 +22,10 @@ export async function deleteAllRecords(table: string) {
   await db.raw(`DELETE FROM ${table} WHERE TRUE;`);
 }
 
-export async function createEntiry<T>(table: string, data: T): Promise<T> {
-  const [newData] = await db(table).insert(data).returning<T[]>('*');
-  return newData as T;
+export async function createEntiry<K extends keyof Tables>(
+  table: K,
+  data: any,
+) {
+  const [newData] = await db(table).insert(data).returning('*');
+  return newData;
 }

@@ -5,9 +5,10 @@ import { KnexUserMapper } from '@app/infrastructure/persistence/knex/mapper/knex
 
 export async function createUser(_user: User) {
   const password = await HashService.hashPassword(_user.password);
+  const data = KnexUserMapper.toKnex(_user);
   const result = await createEntiry('users', {
-    ..._user.currentState,
+    ...data,
     password,
-  } as User);
+  });
   return KnexUserMapper.toDomain(result);
 }

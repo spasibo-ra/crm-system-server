@@ -1,7 +1,7 @@
 import { Customer } from '@app/domain/crm/customer';
-
+import { CustomerTable } from '../types/tables';
 export class KnexCustomerMapper {
-  static toDomain(raw: Customer): Customer {
+  static toDomain(raw: CustomerTable): Customer {
     const model = new Customer({
       id: raw.id,
       createdAt: raw.createdAt,
@@ -11,5 +11,16 @@ export class KnexCustomerMapper {
       phone: raw.phone,
     });
     return model;
+  }
+
+  static toKnex(customer: Customer): CustomerTable {
+    return {
+      id: customer.id,
+      email: customer.email,
+      name: customer.name,
+      phone: customer.phone,
+      createdAt: customer.createdAt,
+      updatedAt: customer.createdAt,
+    };
   }
 }

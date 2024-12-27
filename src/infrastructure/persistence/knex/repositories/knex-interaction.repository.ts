@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectDB, Knex } from '@shared/knex';
-import { Interaction, InteractionProps } from '@app/domain/crm/interaction';
+import { Interaction } from '@app/domain/crm/interaction';
 import { InteractionRepository } from '@app/application/crm/ports';
 import { KnexInteractionMapper } from '../mapper/knex-interaction.mapper';
 
@@ -15,11 +15,8 @@ export class KnexInteractionRepository implements InteractionRepository {
   ): Promise<{ data: Interaction[]; total: number }> {
     const skip = (page - 1) * limit;
     const [interactions, total] = await Promise.all([
-      this.db(this.interactionTable)
-        .select<Interaction[]>()
-        .limit(limit)
-        .offset(skip),
-      this.db(this.interactionTable).count('id'),
+      this.db('interactions').select().limit(limit).offset(skip),
+      this.db('interactions').count('id'),
     ]);
 
     const data = interactions.map((i) => KnexInteractionMapper.toDomain(i));
@@ -27,15 +24,12 @@ export class KnexInteractionRepository implements InteractionRepository {
   }
 
   async findById(id: string): Promise<Interaction | null> {
-    const interaction = await this.db(this.interactionTable)
-      .first<Interaction>()
-      .where({ id });
-
+    const interaction = await this.db('interactions').first().where({ id });
     return interaction ? KnexInteractionMapper.toDomain(interaction) : null;
   }
   async findByCustomer(customerId: string): Promise<Interaction[] | null> {
-    const interactions = await this.db(this.interactionTable)
-      .select<Interaction[]>()
+    const interactions = await this.db('interactions')
+      .select()
       .where({ customerId });
 
     return interactions.length
@@ -44,8 +38,8 @@ export class KnexInteractionRepository implements InteractionRepository {
   }
 
   async findByManager(managerId: string): Promise<Interaction[] | null> {
-    const interactions = await this.db(this.interactionTable)
-      .select<Interaction[]>()
+    const interactions = await this.db('interactions')
+      .select()
       .where({ managerId });
 
     return interactions.length
@@ -54,19 +48,10 @@ export class KnexInteractionRepository implements InteractionRepository {
   }
 
   async create(interaction: Interaction): Promise<Interaction> {
-    const data: InteractionProps = {
-      id: interaction.id,
-      customerId: interaction.customerId,
-      managerId: interaction.managerId,
-      type: interaction.type,
-      description: interaction.description,
-      createdAt: interaction.createdAt,
-      updatedAt: interaction.updatedAt,
-    };
-
-    const [createdInteraction] = await this.db(this.interactionTable)
+    const data = KnexInteractionMapper.toKnex(interaction);
+    const [createdInteraction] = await this.db('interactions')
       .insert(data)
-      .returning<Interaction[]>('*');
+      .returning('*');
     return KnexInteractionMapper.toDomain(createdInteraction);
   }
 
@@ -74,16 +59,16 @@ export class KnexInteractionRepository implements InteractionRepository {
     id: string,
     interaction: Partial<Interaction>,
   ): Promise<Interaction | null> {
-    const [updatedInteraction] = await this.db(this.interactionTable)
+    const [updatedInteraction] = await this.db('interactions')
       .update(interaction)
       .where({ id })
-      .returning<Interaction[]>('*');
+      .returning('*');
     return updatedInteraction
       ? KnexInteractionMapper.toDomain(updatedInteraction)
       : null;
   }
 
   async delete(id: string): Promise<void> {
-    await this.db(this.interactionTable).delete().where({ id });
+    await this.db('interactions').delete().where({ id });
   }
 }
