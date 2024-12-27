@@ -1,5 +1,6 @@
 import { DealStage, DealStatus } from '@app/domain/crm/deal';
 import { InteractionType } from '@app/domain/crm/interaction';
+import { TaskStatus } from '@app/domain/crm/task';
 
 export interface UserTable {
   id: string;
@@ -59,6 +60,20 @@ export interface ContactTable {
   email: string;
   phone?: string;
   companyId: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface TaskTable {
+  id: string;
+  managerId: string;
+  customerId: string;
+  dealId: string;
+  title: string;
+  description?: string;
+  status: TaskStatus;
+  dueDate?: Date;
+  completedAt?: Date;
   createdAt: Date;
   updatedAt: Date;
 }
