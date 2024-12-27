@@ -1,3 +1,4 @@
+import { DealStage, DealStatus } from '@app/domain/crm/deal';
 import { InteractionType } from '@app/domain/crm/interaction';
 
 export interface UserTable {
