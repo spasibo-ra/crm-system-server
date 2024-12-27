@@ -1,7 +1,8 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { HashService } from '@shared/hash/hash.service';
-import { GetUserByEmailUseCase, CreateUserUseCase } from '../user';
+import { CreateUserUseCase } from '../user';
 import { UserRole } from '@app/domain/crm/user';
+import { UserRepository } from '../../ports';
 
 interface RegisterUseCaseCommand {
   email: string;
@@ -13,13 +14,13 @@ interface RegisterUseCaseCommand {
 @Injectable()
 export class RegisterUseCase {
   constructor(
-    private readonly getUserByEmailUseCase: GetUserByEmailUseCase,
+    private readonly userRepository: UserRepository,
     private readonly createUserUseCase: CreateUserUseCase,
   ) {}
 
   async execute(registerCommand: RegisterUseCaseCommand) {
     const { email, name, role = 'user' } = registerCommand;
-    const existingUser = await this.getUserByEmailUseCase.execute({ email });
+    const existingUser = await this.userRepository.findByEmail(email);
     if (existingUser) throw new ConflictException('Email is already in use');
 
     const password = await HashService.hashPassword(registerCommand.password);

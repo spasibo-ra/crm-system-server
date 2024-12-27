@@ -6,6 +6,7 @@ import {
   CompanyTable,
   ContactTable,
   TaskTable,
+  RefreshTokenTable,
 } from './tables';
 
 declare module 'knex/types/tables' {
@@ -17,5 +18,6 @@ declare module 'knex/types/tables' {
     companies: CompanyTable;
     contacts: ContactTable;
     tasks: TaskTable;
+    refresh_token: RefreshTokenTable;
   }
 }

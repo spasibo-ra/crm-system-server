@@ -10,4 +10,5 @@ export abstract class UserRepository {
   abstract create(user: User): Promise<User>;
   abstract update(id: string, user: Partial<User>): Promise<User | null>;
   abstract delete(id: string): Promise<void>;
+  abstract updateLastLogin(id: string): Promise<void>;
 }

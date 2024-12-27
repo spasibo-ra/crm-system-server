@@ -51,4 +51,10 @@ export class KnexUserRepository implements UserRepository {
   async delete(id: string): Promise<void> {
     await this.db('users').delete().where({ id });
   }
+
+  async updateLastLogin(id: string): Promise<void> {
+    await this.db('users')
+      .update({ lastLoginAt: this.db.fn.now() })
+      .where({ id });
+  }
 }

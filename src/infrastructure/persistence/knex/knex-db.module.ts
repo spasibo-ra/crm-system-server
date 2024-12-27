@@ -10,6 +10,7 @@ import {
   UserRepository,
   InteractionRepository,
   DealRepository,
+  RefreshTokenRepository,
 } from '@app/application/crm/ports';
 
 import {
@@ -19,6 +20,7 @@ import {
   KnexDealRepository,
   KnexInteractionRepository,
   KnexUserRepository,
+  KnexRefreshTokenRepository,
 } from './repositories';
 
 @Module({
@@ -36,6 +38,7 @@ import {
     { provide: DealRepository, useClass: KnexDealRepository },
     { provide: CompanyRepository, useClass: KnexCompanyRepository },
     { provide: ContactRepository, useClass: KnexContactRepository },
+    { provide: RefreshTokenRepository, useClass: KnexRefreshTokenRepository },
   ],
   exports: [
     UserRepository,
@@ -44,6 +47,7 @@ import {
     DealRepository,
     CompanyRepository,
     ContactRepository,
+    RefreshTokenRepository,
   ],
 })
 export class KnexDBModule {}

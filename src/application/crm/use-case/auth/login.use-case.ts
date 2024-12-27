@@ -1,9 +1,9 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import { HashService } from '@shared/hash/hash.service';
 import { TokenPayload } from '@app/domain/crm/token-payload.interface';
-import { GetUserByEmailUseCase } from '../user';
-import { EnvService } from '@app/infrastructure/env';
+import { UserRepository } from '../../ports';
+import { GenerateTokensUseCase } from './generate-tokens.use-case';
+import { CreateRefreshTokenUseCase } from './create-refresh-token.use-case';
 
 interface LoginUseCaseCommand {
   email: string;
@@ -13,15 +13,13 @@ interface LoginUseCaseCommand {
 @Injectable()
 export class LoginUseCase {
   constructor(
-    private readonly envService: EnvService,
-    private readonly jwtService: JwtService,
-    private readonly getUserByEmailUseCase: GetUserByEmailUseCase,
+    private readonly userRepository: UserRepository,
+    private readonly generateTokensUseCase: GenerateTokensUseCase,
+    private readonly createRefreshTokenUseCase: CreateRefreshTokenUseCase,
   ) {}
 
   async execute(loginCommand: LoginUseCaseCommand) {
-    const user = await this.getUserByEmailUseCase.execute({
-      email: loginCommand.email,
-    });
+    const user = await this.userRepository.findByEmail(loginCommand.email);
     if (!user) throw new UnauthorizedException('Invalid credential');
 
     const isPasswordValid = await HashService.verifyPassword(
@@ -30,20 +28,20 @@ export class LoginUseCase {
     );
     if (!isPasswordValid) throw new UnauthorizedException('Invalid credential');
 
+    await this.userRepository.updateLastLogin(user.id);
+
     const payload: TokenPayload = {
       id: user.id,
       email: user.email,
       role: user.role,
     };
 
-    const refreshOptions = {
-      secret: this.envService.get('REFRESH_JWT_SECRET'),
-      expiresIn: this.envService.get('REFRESH_EXPIRES_IN'),
-    };
-    const [accessToken, refreshToken] = await Promise.all([
-      this.jwtService.signAsync(payload),
-      this.jwtService.signAsync(payload, refreshOptions),
-    ]);
+    const { accessToken, refreshToken } =
+      await this.generateTokensUseCase.execute({ payload });
+    await this.createRefreshTokenUseCase.execute({
+      userId: user.id,
+      token: refreshToken,
+    });
     return { accessToken, refreshToken };
   }
 }

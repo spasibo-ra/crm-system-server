@@ -81,3 +81,11 @@ export interface TaskTable {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface RefreshTokenTable {
+  id: string;
+  userId: string;
+  token: string;
+  expiresAt: Date;
+  createdAt: Date;
+}
