@@ -43,3 +43,22 @@ export interface DealTable {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface CompanyTable {
+  id: string;
+  name: string;
+  industry?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface ContactTable {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone?: string;
+  companyId: string;
+  createdAt: Date;
+  updatedAt: Date;
+}

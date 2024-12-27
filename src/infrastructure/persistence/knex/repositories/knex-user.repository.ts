@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectDB, Knex } from '@shared/knex';
 import { User } from '@app/domain/crm/user';
 import { UserRepository } from '@app/application/crm/ports/user.repository';
-import { KnexUserMapper } from '../mapper/knex-user.mapper';
+import { KnexUserMapper } from '../mapper';
 
 @Injectable()
 export class KnexUserRepository implements UserRepository {

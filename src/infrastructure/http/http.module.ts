@@ -19,6 +19,10 @@ import {
   LoginUseCase,
   RegisterUseCase,
 } from '@app/application/crm/use-case/auth';
+import { CompanyUseCaseModule } from '@app/application/crm/use-case/company';
+import { CompanyController } from './controllers/company/company.controller';
+import { ContactController } from './controllers/contact/contact.controller';
+import { ContactUseCaseModule } from '@app/application/crm/use-case/contact';
 
 @Module({
   imports: [
@@ -36,6 +40,8 @@ import {
     DealUseCaseModule,
     InteractionUseCaseModule,
     UserUseCaseModule,
+    CompanyUseCaseModule,
+    ContactUseCaseModule,
   ],
   providers: [LoginUseCase, RegisterUseCase, JwtStrategy],
   controllers: [
@@ -45,6 +51,8 @@ import {
     DealController,
     InteractionController,
     UserController,
+    CompanyController,
+    ContactController,
   ],
 })
 export class HttpModule {}

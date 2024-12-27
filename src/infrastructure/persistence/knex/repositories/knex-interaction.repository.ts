@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectDB, Knex } from '@shared/knex';
 import { Interaction } from '@app/domain/crm/interaction';
 import { InteractionRepository } from '@app/application/crm/ports';
-import { KnexInteractionMapper } from '../mapper/knex-interaction.mapper';
+import { KnexInteractionMapper } from '../mapper';
 
 @Injectable()
 export class KnexInteractionRepository implements InteractionRepository {

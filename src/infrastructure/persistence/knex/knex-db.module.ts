@@ -4,16 +4,22 @@ import { KnexService } from './knex.service';
 import { EnvModule, EnvService } from '@app/infrastructure/env';
 
 import {
+  CompanyRepository,
+  ContactRepository,
   CustomerRepository,
   UserRepository,
   InteractionRepository,
   DealRepository,
 } from '@app/application/crm/ports';
 
-import { KnexUserRepository } from './repositories/knex-user.repository';
-import { KnexInteractionRepository } from './repositories/knex-interaction.repository';
-import { KnexCustomerRepository } from './repositories/knex-customer.repository';
-import { KnexDealRepository } from './repositories/knex-deal.repository';
+import {
+  KnexCompanyRepository,
+  KnexContactRepository,
+  KnexCustomerRepository,
+  KnexDealRepository,
+  KnexInteractionRepository,
+  KnexUserRepository,
+} from './repositories';
 
 @Module({
   imports: [
@@ -28,12 +34,16 @@ import { KnexDealRepository } from './repositories/knex-deal.repository';
     { provide: InteractionRepository, useClass: KnexInteractionRepository },
     { provide: CustomerRepository, useClass: KnexCustomerRepository },
     { provide: DealRepository, useClass: KnexDealRepository },
+    { provide: CompanyRepository, useClass: KnexCompanyRepository },
+    { provide: ContactRepository, useClass: KnexContactRepository },
   ],
   exports: [
     UserRepository,
     InteractionRepository,
     CustomerRepository,
     DealRepository,
+    CompanyRepository,
+    ContactRepository,
   ],
 })
 export class KnexDBModule {}

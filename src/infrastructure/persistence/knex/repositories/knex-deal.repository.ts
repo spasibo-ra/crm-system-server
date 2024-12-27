@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Deal } from '@app/domain/crm/deal';
 import { InjectDB, Knex } from '@shared/knex';
 import { DealRepository } from '@app/application/crm/ports';
-import { KnexDealMapper } from '../mapper/knex-deal.mapper';
+import { KnexDealMapper } from '../mapper';
 
 @Injectable()
 export class KnexDealRepository implements DealRepository {

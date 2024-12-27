@@ -3,6 +3,8 @@ import {
   CustomerTable,
   InteractionTable,
   DealTable,
+  CompanyTable,
+  ContactTable,
 } from './tables';
 
 declare module 'knex/types/tables' {
@@ -11,5 +13,7 @@ declare module 'knex/types/tables' {
     customers: CustomerTable;
     interactions: InteractionTable;
     deals: DealTable;
+    companies: CompanyTable;
+    contacts: ContactTable;
   }
 }

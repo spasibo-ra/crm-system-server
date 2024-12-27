@@ -2,11 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectDB, Knex } from '@shared/knex';
 import { Customer } from '@app/domain/crm/customer';
 import { CustomerRepository } from '@app/application/crm/ports/customer.repository';
-import { KnexCustomerMapper } from '../mapper/knex-customer.mapper';
+import { KnexCustomerMapper } from '../mapper';
 
 @Injectable()
 export class KnexCustomerRepository implements CustomerRepository {
-  private readonly customerTable: string = 'customers';
   constructor(@InjectDB() private readonly db: Knex) {}
   async findAll(
     limit: number,
