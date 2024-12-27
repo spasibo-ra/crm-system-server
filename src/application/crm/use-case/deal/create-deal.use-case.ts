@@ -8,13 +8,7 @@ interface CreateDealUseCaseCommand {
   user: TokenPayload;
   _deal: Pick<
     Deal,
-    | 'customerId'
-    | 'managerId'
-    | 'title'
-    | 'stage'
-    | 'status'
-    | 'amount'
-    | 'currency'
+    'customerId' | 'title' | 'stage' | 'status' | 'amount' | 'currency'
   > &
     Partial<Pick<Deal, 'description' | 'closedAt'>>;
 }

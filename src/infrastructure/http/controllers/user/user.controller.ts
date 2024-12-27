@@ -34,7 +34,7 @@ export class UserController {
 
   @Patch(':id')
   @ApiBearerAuth()
-  @Auth()
+  @Auth('admin')
   async updateUser(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateUserDto: UpdateUserDto,

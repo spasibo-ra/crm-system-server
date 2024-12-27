@@ -17,6 +17,7 @@ import { DealUseCaseModule } from '@app/application/crm/use-case/deal';
 import { CustomerUseCaseModule } from '@app/application/crm/use-case/customer';
 import {
   LoginUseCase,
+  RefreshTokenUseCase,
   RegisterUseCase,
 } from '@app/application/crm/use-case/auth';
 import { CompanyUseCaseModule } from '@app/application/crm/use-case/company';
@@ -34,6 +35,7 @@ import { ContactUseCaseModule } from '@app/application/crm/use-case/contact';
       useFactory: async (envService: EnvService) => ({
         secret: envService.get('JWT_SECRET'),
         signOptions: { expiresIn: envService.get('EXPIRES_IN') },
+        global: false,
       }),
     }),
     CustomerUseCaseModule,
@@ -43,7 +45,7 @@ import { ContactUseCaseModule } from '@app/application/crm/use-case/contact';
     CompanyUseCaseModule,
     ContactUseCaseModule,
   ],
-  providers: [LoginUseCase, RegisterUseCase, JwtStrategy],
+  providers: [LoginUseCase, RegisterUseCase, RefreshTokenUseCase, JwtStrategy],
   controllers: [
     AppController,
     AuthController,

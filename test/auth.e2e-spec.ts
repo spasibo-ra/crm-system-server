@@ -9,6 +9,7 @@ import { PersistenceModule } from '@app/infrastructure/persistence/persistence.m
 import { AuthController } from '@app/infrastructure/http/controllers/auth/auth.controller';
 import {
   LoginUseCase,
+  RefreshTokenUseCase,
   RegisterUseCase,
 } from '@app/application/crm/use-case/auth';
 import {
@@ -16,6 +17,7 @@ import {
   GetUserByEmailUseCase,
 } from '@app/application/crm/use-case/user';
 import { user as _user, createUser, deleteAllRecords } from './common';
+import { GetUserByIdUseCase } from '@app/application/crm/use-case/user/get-user-by-id.use-case';
 
 describe('AuthController (e2e)', () => {
   let httpServer: any;
@@ -38,9 +40,11 @@ describe('AuthController (e2e)', () => {
       controllers: [AuthController],
       providers: [
         GetUserByEmailUseCase,
+        GetUserByIdUseCase,
         CreateUserUseCase,
         LoginUseCase,
         RegisterUseCase,
+        RefreshTokenUseCase,
       ],
     }).compile();
 

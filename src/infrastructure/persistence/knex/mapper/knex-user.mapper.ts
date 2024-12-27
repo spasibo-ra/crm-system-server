@@ -4,10 +4,13 @@ export class KnexUserMapper {
   static toDomain(raw: UserTable): User {
     const model = new User({
       id: raw.id,
-      createdAt: raw.createdAt,
       email: raw.email,
-      name: raw.name,
       password: raw.password,
+      name: raw.name,
+      role: raw.role,
+      status: raw.status,
+      lastLoginAt: raw.lastLoginAt,
+      createdAt: raw.createdAt,
       updatedAt: raw.updatedAt,
     });
     return model;
@@ -15,9 +18,12 @@ export class KnexUserMapper {
   static toKnex(user: User): UserTable {
     return {
       id: user.id,
-      name: user.name,
       email: user.email,
       password: user.password,
+      name: user.name,
+      role: user.role,
+      status: user.status,
+      lastLoginAt: user.lastLoginAt,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     };

@@ -1,15 +1,23 @@
 import { Entity } from '@app/core/entities/entity';
 
+export type UserRole = 'admin' | 'user' | 'manager';
+
+export type UserStatus = 'active' | 'inactive';
+
 export interface UserProps {
   id?: string;
   email: string;
   password: string;
   name: string;
+  role: UserRole;
+  status?: UserStatus;
+  lastLoginAt?: Date;
   createdAt: Date;
   updatedAt: Date;
 }
 export class User extends Entity<UserProps> {
   constructor(props: UserProps) {
+    props.status = props.status || 'active';
     super(props);
   }
 
@@ -27,6 +35,18 @@ export class User extends Entity<UserProps> {
 
   get name(): string {
     return this.props.name;
+  }
+
+  get role(): UserRole {
+    return this.props.role;
+  }
+
+  get status(): UserStatus {
+    return this.props.status;
+  }
+
+  get lastLoginAt(): Date | undefined {
+    return this.props.lastLoginAt;
   }
 
   get createdAt(): Date {

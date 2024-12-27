@@ -44,14 +44,14 @@ export class CustomerController {
   }
 
   @Post()
-  @Auth()
+  @Auth('admin', 'manager')
   @ApiBearerAuth()
   async create(@Body() createDto: CreateCustomerDto) {
     return await this.createCustomerUseCase.execute(createDto);
   }
 
   @Patch(':id')
-  @Auth()
+  @Auth('admin', 'manager')
   @ApiBearerAuth()
   async update(
     @Param('id', new ParseUUIDPipe()) id: string,

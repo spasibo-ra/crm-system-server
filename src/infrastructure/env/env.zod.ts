@@ -11,6 +11,8 @@ export const envSchema = z.object({
   DATABASE_URL: z.string().url(),
   JWT_SECRET: z.coerce.string().default('secret'),
   EXPIRES_IN: z.coerce.string().default('1h'),
+  REFRESH_JWT_SECRET: z.coerce.string().default('refresh'),
+  REFRESH_EXPIRES_IN: z.coerce.string().default('7d'),
 });
 
 export type Env = z.infer<typeof envSchema>;

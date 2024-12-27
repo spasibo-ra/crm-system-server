@@ -8,6 +8,7 @@ export const user: User = new User({
   email: 'test@spasibo.ra',
   name: 'testuser',
   password: 'testuser123',
+  role: 'admin',
   createdAt: new Date(),
   updatedAt: new Date(),
 });

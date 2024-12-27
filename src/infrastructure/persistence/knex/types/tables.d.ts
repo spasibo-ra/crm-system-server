@@ -1,12 +1,16 @@
 import { DealStage, DealStatus } from '@app/domain/crm/deal';
 import { InteractionType } from '@app/domain/crm/interaction';
 import { TaskStatus } from '@app/domain/crm/task';
+import { UserRole, UserStatus } from '@app/domain/crm/user';
 
 export interface UserTable {
   id: string;
   email: string;
   password: string;
   name: string;
+  role: UserRole;
+  status: UserStatus;
+  lastLoginAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
 }

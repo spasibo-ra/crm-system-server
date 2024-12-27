@@ -45,14 +45,14 @@ export class ContactController {
   }
 
   @Post()
-  @Auth()
+  @Auth('admin', 'manager')
   @ApiBearerAuth()
   async create(@Body() createDto: CreateContactDto) {
     return await this.createContactUseCase.execute(createDto);
   }
 
   @Patch(':id')
-  @Auth()
+  @Auth('admin', 'manager')
   @ApiBearerAuth()
   async update(
     @Param('id', new ParseUUIDPipe()) id: string,
@@ -62,7 +62,7 @@ export class ContactController {
   }
 
   @Delete(':id')
-  @Auth()
+  @Auth('admin', 'manager')
   @ApiBearerAuth()
   async deleteById(@Param('id', new ParseUUIDPipe()) id: string) {
     return await this.deleteContactUseCase.execute(id);

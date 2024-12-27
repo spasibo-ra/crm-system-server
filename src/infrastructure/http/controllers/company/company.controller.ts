@@ -45,14 +45,14 @@ export class CompanyController {
   }
 
   @Post()
-  @Auth()
+  @Auth('admin', 'manager')
   @ApiBearerAuth()
   async create(@Body() createDto: CreateCompanyDto) {
     return await this.createCompanyUseCase.execute(createDto);
   }
 
   @Patch(':id')
-  @Auth()
+  @Auth('admin', 'manager')
   @ApiBearerAuth()
   async update(
     @Param('id', new ParseUUIDPipe()) id: string,
@@ -62,7 +62,7 @@ export class CompanyController {
   }
 
   @Delete(':id')
-  @Auth()
+  @Auth('admin', 'manager')
   @ApiBearerAuth()
   async deleteById(@Param('id', new ParseUUIDPipe()) id: string) {
     return await this.deleteCompanyUseCase.execute(id);

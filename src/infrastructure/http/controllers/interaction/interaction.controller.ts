@@ -51,7 +51,7 @@ export class InteractionController {
   }
 
   @Post()
-  @Auth()
+  @Auth('admin', 'manager')
   @ApiBearerAuth()
   async create(
     @Req() request: Request,
@@ -64,7 +64,7 @@ export class InteractionController {
   }
 
   @Patch(':id')
-  @Auth()
+  @Auth('admin', 'manager')
   @ApiBearerAuth()
   async update(
     @Req() request: Request,
@@ -79,7 +79,7 @@ export class InteractionController {
   }
 
   @Delete(':id')
-  @Auth()
+  @Auth('admin', 'manager')
   @ApiBearerAuth()
   async deleteById(@Param('id', new ParseUUIDPipe()) id: string) {
     return await this.deleteUseCase.execute(id);

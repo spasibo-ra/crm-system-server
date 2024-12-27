@@ -6,6 +6,7 @@ import {
   MinLength,
   IsOptional,
 } from 'class-validator';
+import { UserStatus } from '@app/domain/crm/user';
 
 export class CreateUserDto {
   @IsEmail({}, { message: 'Invalid email address' })
@@ -19,6 +20,10 @@ export class CreateUserDto {
   @IsString()
   @IsNotEmpty({ message: 'Name must not be empty' })
   name: string;
+
+  @IsString()
+  @IsNotEmpty({ message: 'Role must not be empty' })
+  role: string;
 }
 
 export class UpdateUserDto {
@@ -29,4 +34,8 @@ export class UpdateUserDto {
   @IsOptional()
   @ApiProperty({ required: false, default: 'test_new@crm-test.ra' })
   email?: string;
+
+  @IsOptional()
+  @ApiProperty({ required: false, default: 'active' })
+  status?: UserStatus;
 }

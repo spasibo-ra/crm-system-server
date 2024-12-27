@@ -4,7 +4,7 @@ import { UserRepository } from '../../ports/user.repository';
 
 interface UpdateUserUseCaseCommand {
   id: string;
-  user: Partial<Pick<User, 'name' | 'email'>>;
+  user: Partial<Pick<User, 'name' | 'email' | 'status'>>;
 }
 
 @Injectable()

@@ -1,12 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
-import { User } from '@app/domain/crm/user';
+import { User, UserRole } from '@app/domain/crm/user';
 import { UserRepository } from '../../ports/user.repository';
 
 export interface CreateUserUseCaseCommand {
   email: string;
   password: string;
   name: string;
+  role: UserRole;
+  lastLoginAt?: Date;
 }
 
 @Injectable()

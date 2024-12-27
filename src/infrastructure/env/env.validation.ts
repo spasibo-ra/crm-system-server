@@ -38,6 +38,12 @@ class EnvironmentVariables {
 
   @IsString()
   EXPIRES_IN: string;
+
+  @IsString()
+  REFRESH_JWT_SECRET: string;
+
+  @IsString()
+  REFRESH_EXPIRES_IN: string;
 }
 
 export function validate(
