@@ -7,10 +7,15 @@ import {
   swaggerDocumentOptions,
 } from '@shared/config/swagger.config';
 import { EnvService } from './infrastructure/env';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
+import { HttpLoggingInterceptor } from '@shared/logger/http-logging.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(EnvService);
+  const logger = app.get(WINSTON_MODULE_NEST_PROVIDER);
+  app.useLogger(logger);
+  app.useGlobalInterceptors(new HttpLoggingInterceptor(logger));
   app.useGlobalPipes(
     new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }),
   );
