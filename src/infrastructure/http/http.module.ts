@@ -10,6 +10,7 @@ import { AuthController } from './controllers/auth/auth.controller';
 import { DealController } from './controllers/deal/deal.controller';
 import { CompanyController } from './controllers/company/company.controller';
 import { ContactController } from './controllers/contact/contact.controller';
+import { AccountController } from './controllers/account/account.controller';
 
 import { UserUseCaseModule } from '@app/application/crm/use-case/user';
 import { InteractionUseCaseModule } from '@app/application/crm/use-case/interaction';
@@ -18,9 +19,15 @@ import { CustomerUseCaseModule } from '@app/application/crm/use-case/customer';
 import { CompanyUseCaseModule } from '@app/application/crm/use-case/company';
 import { ContactUseCaseModule } from '@app/application/crm/use-case/contact';
 import { AuthModule } from './auth.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', '..', '..', 'uploads'),
+      serveRoot: '/uploads',
+    }),
     EnvModule,
     AuthModule,
     CustomerUseCaseModule,
@@ -33,6 +40,7 @@ import { AuthModule } from './auth.module';
   providers: [JwtStrategy],
   controllers: [
     AppController,
+    AccountController,
     AuthController,
     CustomerController,
     DealController,

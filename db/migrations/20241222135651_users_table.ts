@@ -12,6 +12,7 @@ export async function up(knex: Knex): Promise<void> {
     t.string('name', 25).notNullable();
     t.specificType('role', 'UserRole').notNullable().defaultTo('user');
     t.specificType('status', 'UserStatus').notNullable().defaultTo('active');
+    t.text('avatarUrl').nullable();
     t.timestamp('lastLoginAt', { useTz: true }).nullable();
     t.timestamp('createdAt', { useTz: true }).defaultTo(knex.fn.now());
     t.timestamp('updatedAt', { useTz: true }).defaultTo(knex.fn.now());

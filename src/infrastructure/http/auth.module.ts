@@ -50,5 +50,6 @@ import { UserUseCaseModule } from '@app/application/crm/use-case/user';
     LogoutUseCase,
     ClearExpiredTokenUseCase,
   ],
+  controllers: [],
 })
 export class AuthModule {}

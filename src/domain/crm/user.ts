@@ -12,6 +12,7 @@ export interface UserProps {
   role: UserRole;
   status?: UserStatus;
   lastLoginAt?: Date;
+  avatarUrl?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -43,6 +44,10 @@ export class User extends Entity<UserProps> {
 
   get status(): UserStatus {
     return this.props.status;
+  }
+
+  get avatarUrl(): string | null {
+    return this.props.avatarUrl;
   }
 
   get lastLoginAt(): Date | undefined {
