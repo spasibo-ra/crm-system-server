@@ -8,6 +8,7 @@ export interface CreateUserUseCaseCommand {
   password: string;
   name: string;
   role: UserRole;
+  avatarUrl?: string;
   lastLoginAt?: Date;
 }
 

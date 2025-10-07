@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectDB, Knex } from '@shared/knex';
-import { User } from '@app/domain/crm/user';
+import { User, UserProps } from '@app/domain/crm/user';
 import { UserRepository } from '@app/application/crm/ports/user.repository';
 import { KnexUserMapper } from '../mapper';
 
@@ -23,9 +23,9 @@ export class KnexUserRepository implements UserRepository {
     return { data, total: +total[0].count };
   }
 
-  async findById(id: string): Promise<User | null> {
+  async findById(id: string): Promise<UserProps | null> {
     const user = await this.db('users').first<User>().where({ id });
-    return user ? KnexUserMapper.toDomain(user) : null;
+    return user ? KnexUserMapper.toDomain(user).currentState : null;
   }
 
   async findByEmail(email: string): Promise<User | null> {
