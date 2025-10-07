@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectDB, Knex } from '@shared/knex';
-import { Customer } from '@app/domain/crm/customer';
+import { Customer, CustomerProps } from '@app/domain/crm/customer';
 import { CustomerRepository } from '@app/application/crm/ports/customer.repository';
 import { KnexCustomerMapper } from '../mapper';
 
@@ -10,15 +10,15 @@ export class KnexCustomerRepository implements CustomerRepository {
   async findAll(
     limit: number,
     page: number,
-  ): Promise<{ data: Customer[]; total: number }> {
+  ): Promise<{ data: CustomerProps[]; total: number }> {
     const skip = (page - 1) * limit;
     const [customers, total] = await Promise.all([
       this.db('customers').select().limit(limit).offset(skip),
       this.db('customers').count('id'),
     ]);
 
-    const data = customers.map((customer) =>
-      KnexCustomerMapper.toDomain(customer),
+    const data = customers.map(
+      (customer) => KnexCustomerMapper.toDomain(customer).currentState,
     );
     return { data, total: +total[0].count };
   }

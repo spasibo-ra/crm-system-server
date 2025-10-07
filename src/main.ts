@@ -9,9 +9,13 @@ import {
 import { EnvService } from './infrastructure/env';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { HttpLoggingInterceptor } from '@shared/logger/http-logging.interceptor';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { join } from 'path';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  app.enableCors({ origin: 'http://localhost:4200' });
+  app.useStaticAssets(join(__dirname, '..', 'uploads'));
   const configService = app.get(EnvService);
   const logger = app.get(WINSTON_MODULE_NEST_PROVIDER);
   app.useLogger(logger);
