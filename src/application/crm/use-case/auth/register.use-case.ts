@@ -9,6 +9,7 @@ interface RegisterUseCaseCommand {
   password: string;
   name: string;
   role?: UserRole;
+  avatarUrl?: string;
 }
 
 @Injectable()
@@ -19,7 +20,7 @@ export class RegisterUseCase {
   ) {}
 
   async execute(registerCommand: RegisterUseCaseCommand) {
-    const { email, name, role = 'user' } = registerCommand;
+    const { email, name, role = 'user', avatarUrl } = registerCommand;
     const existingUser = await this.userRepository.findByEmail(email);
     if (existingUser) throw new ConflictException('Email is already in use');
 
@@ -30,6 +31,7 @@ export class RegisterUseCase {
       name,
       password,
       role,
+      avatarUrl,
     });
 
     return { message: 'User registered successfully' };

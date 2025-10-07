@@ -1,5 +1,12 @@
+import { UserRole } from '@app/domain/crm/user';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MinLength,
+} from 'class-validator';
 
 export class RegisterDto {
   @IsEmail({}, { message: 'Invalid email address' })
@@ -16,4 +23,13 @@ export class RegisterDto {
   @IsNotEmpty({ message: 'Name must not be empty' })
   @ApiProperty({ default: 'testuser' })
   name: string;
+
+  @IsString()
+  @IsNotEmpty()
+  role: UserRole;
+
+  @IsOptional()
+  @IsString()
+  @ApiProperty({ required: false, default: null })
+  file?: Express.Multer.File;
 }

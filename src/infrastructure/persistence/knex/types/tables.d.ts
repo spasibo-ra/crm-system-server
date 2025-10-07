@@ -10,6 +10,7 @@ export interface UserTable {
   name: string;
   role: UserRole;
   status: UserStatus;
+  avatarUrl: string | null;
   lastLoginAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
